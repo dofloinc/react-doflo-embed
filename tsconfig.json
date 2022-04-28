@@ -8,6 +8,7 @@
     "declaration": true,
     "declarationDir": "types",
     "sourceMap": true,
+    "resolveJsonModule": true,
     "outDir": "dist",
     "moduleResolution": "node",
     "emitDeclarationOnly": false,
