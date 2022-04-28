@@ -11,7 +11,9 @@ export default function DoFloEmbed(props: {
   const [srcModified, setSrcModified] = useState(false);
   const [height, setHeight] = useState("300px");
   const [opacity, setOpacity] = useState(0.01);
-
+  const version =
+    "v[VI]{version}[/VI]"; /* this is replaced by storybook during dev and rollup during build */
+ 
   useEffect(() => {
     if (iframe.current && queue.current.length > 0) {
       queue.current.forEach((d) => {
@@ -20,7 +22,7 @@ export default function DoFloEmbed(props: {
       queue.current = [];
     }
   }, [iframe.current]);
-  
+
   const handleIframeMessage = useCallback(
     (e: { data: string; origin: string }) => {
       if (!e.data.split) {
@@ -86,7 +88,8 @@ export default function DoFloEmbed(props: {
         iframeParams = iframeParams.concat(_srcAr[1].split("&"));
         _src = _srcAr[0];
       }
-      iframeParams.push("dfeVer=v[VI]{version}[/VI]");
+
+      iframeParams.push(`dfeVer=${version}`);
       setSrc(_src + "?" + iframeParams.join("&"));
     }
 
