@@ -22,7 +22,7 @@
     "preversion": "npm test",
     "build": "rm -rf ./dist && echo {'\"'version'\"':$(jq '.version' ./package.json)}>./src/version.json && NODE_ENV=production rollup -c",
     "prepack": "echo {'\"'version'\"':$(jq '.version' ./package.json)}>./dist/version.json",
-    "prepublishOnly": "npm run build",
+    "postversion": "npm run build",
     "semantic-release": "semantic-release",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
