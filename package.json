@@ -5,8 +5,9 @@
   "main": "dist/cjs/react-doflo-embed.js",
   "module": "dist/esm/react-doflo-embed.js",
   "sideEffects": false,
+  "types": "dist/index.d.ts",
   "files": [
-    "lib"
+    "dist"
   ],
   "publishConfig": {
     "access": "public"
