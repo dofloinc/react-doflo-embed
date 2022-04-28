@@ -1,5 +1,4 @@
 import React, { useCallback, useRef, useEffect, useState } from "react";
-import { version } from "./version.json";
 export default function DoFloEmbed(props: {
   src: string;
   className?: string;
@@ -87,7 +86,7 @@ export default function DoFloEmbed(props: {
         iframeParams = iframeParams.concat(_srcAr[1].split("&"));
         _src = _srcAr[0];
       }
-      iframeParams.push('dfeVer=v[VI]{version}[/VI]');
+      iframeParams.push("dfeVer=v[VI]{version}[/VI]");
       setSrc(_src + "?" + iframeParams.join("&"));
     }
 
