@@ -38,7 +38,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dofloinc/react-doflo-embed.git"
+    "url": "https://github.com/dofloinc/react-doflo-embed.git"
   },
   "peerDependencies": {
     "react": "^15.0.0 || ^18.0.0",
