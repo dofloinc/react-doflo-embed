@@ -87,7 +87,7 @@ export default function DoFloEmbed(props: {
         iframeParams = iframeParams.concat(_srcAr[1].split("&"));
         _src = _srcAr[0];
       }
-      iframeParams.push(`dfeVer=${version}`);
+      iframeParams.push('dfeVer=v[VI]{version}[/VI]');
       setSrc(_src + "?" + iframeParams.join("&"));
     }
 
