@@ -1,0 +1,46 @@
+name: doFlo Embed React Package Lint, Test and Publish
+
+on:
+  push:
+    branches:
+      - "main"
+    paths:
+      - README.md
+      - src/**
+      - package.json
+      - .github/workflows/publish react.yml
+
+jobs:
+  react-build-and-publish-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 16
+          registry-url: https://registry.npmjs.org/
+      - run: npm ci
+      - run: npm run build
+      - run: npm run semantic-release
+        env:
+          NPM_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          GH_TOKEN: ${{secrets.OAUTH_TOKEN}}
+      - name: Slack Notify
+        uses: rtCamp/action-slack-notify@v2.1.1
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_USERNAME: "floBot"
+          SLACK_ICON: "https://res.cloudinary.com/flowon/image/upload/v1607152165/logos/social-dark.png"
+          SLACK_FOOTER: "Powered By doflo floBot"
+      - name: The job has failed
+        if: ${{ failure() }}
+        uses: rtCamp/action-slack-notify@v2.1.1
+        env:
+          SLACK_COLOR: "#FF007F" # Hot Pink
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_USERNAME: "👹 evil floBot"
+          SLACK_ICON: "https://res.cloudinary.com/flowon/image/upload/v1607152165/logos/social-dark.png"
+          SLACK_FOOTER: "We were all let down by the doflo floBot"
