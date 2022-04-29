@@ -19,9 +19,10 @@ export default function DoFloEmbed(props: {
   ).split("/");
   let host = pathAr[2];
   let embedId = pathAr[pathAr.length - 1];
+  let hosted = pathAr[pathAr.length - 2] === "w";
   let query = queryAr.length > 1 ? "?" + queryAr[1] : "";
   const [src, setSrc] = useState(
-    `${pathAr[0]}//${host}/iframe/${embedId}/${query}`
+    `${pathAr[0]}//${host}/iframe/${hosted ? "w/" : ""}${embedId}/${query}`
   );
   const [srcModified, setSrcModified] = useState(false);
   const [height, setHeight] = useState("300px");

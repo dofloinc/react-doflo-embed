@@ -15,6 +15,9 @@ storiesOf("DoFloEmbed", module)
   .add("Simple Name", () => (
     <DoFloEmbed src="https://forms.doflo.com/73d244192484358/" />
   ))
+  .add("Hosted Form Pattern", () => (
+    <DoFloEmbed src="https://forms.doflo.com/iframe/w/73d244192484358/" />
+  ))
   .add("Simple Trailing Slash", () => (
     <DoFloEmbed src="https://forms.doflo.com/form/73d244192484358/" />
   ))
