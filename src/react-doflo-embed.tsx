@@ -7,13 +7,19 @@ export default function DoFloEmbed(props: {
   const iframe = useRef<null | HTMLIFrameElement>(null);
   const queue = useRef<Array<{ data: string; origin: string }>>([]);
   const [added, setAdded] = useState(false);
-  const [src, setSrc] = useState(props.src);
+  /**
+   * Replace the other values incase someone uses the wrong version
+   * in fact we are going encourage the usage of the named version
+   *  */
+  const [src, setSrc] = useState(
+    props.src.replace("/form/", "/iframe/").replace("/embed/", "/iframe/")
+  );
   const [srcModified, setSrcModified] = useState(false);
   const [height, setHeight] = useState("300px");
   const [opacity, setOpacity] = useState(0.01);
   const version =
     "v[VI]{version}[/VI]"; /* this is replaced by storybook during dev and rollup during build */
- 
+
   useEffect(() => {
     if (iframe.current && queue.current.length > 0) {
       queue.current.forEach((d) => {
