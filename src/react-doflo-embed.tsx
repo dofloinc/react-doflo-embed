@@ -11,8 +11,17 @@ export default function DoFloEmbed(props: {
    * Replace the other values incase someone uses the wrong version
    * in fact we are going encourage the usage of the named version
    *  */
+  let queryAr = props.src.split("?");
+  let pathAr = (
+    queryAr[0].endsWith("/")
+      ? queryAr[0].substring(0, queryAr[0].length - 1)
+      : queryAr[0]
+  ).split("/");
+  let host = pathAr[2];
+  let embedId = pathAr[pathAr.length - 1];
+  let query = queryAr.length > 1 ? "?" + queryAr[1] : "";
   const [src, setSrc] = useState(
-    props.src.replace("/form/", "/iframe/").replace("/embed/", "/iframe/")
+    `${pathAr[0]}//${host}/iframe/${embedId}/${query}`
   );
   const [srcModified, setSrcModified] = useState(false);
   const [height, setHeight] = useState("300px");
