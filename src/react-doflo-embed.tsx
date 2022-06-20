@@ -57,7 +57,7 @@ export default function DoFloEmbed(props: {
             iframe.current.scrollIntoView();
             break;
           case "setHeight":
-            if (props.minHeight ? props.minHeight : 0 > parseInt(args[1])) {
+            if ((props.minHeight ? props.minHeight : 0) >= parseInt(args[1])) {
               setHeight(`${props.minHeight}px`);
             } else {
               setHeight(`${args[1]}px`);
