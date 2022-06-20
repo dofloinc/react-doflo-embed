@@ -8,7 +8,7 @@ import DoFloEmbed from "../react-doflo-embed";
 storiesOf("DoFloEmbed", module)
   .add("Simple (localhost)", () => (
     <DoFloEmbed
-      minHeight={3000}
+      minHeight={500}
       src="http://localhost:3007/7b6c19b2-4efd-411e-b7d9-d46b283a19b9"
     />
   ))
