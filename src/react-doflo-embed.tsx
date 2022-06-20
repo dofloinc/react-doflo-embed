@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useEffect, useState } from "react";
 export default function DoFloEmbed(props: {
   src: string;
   className?: string;
+  minHeight?: number;
   scrolling?: boolean;
 }) {
   const iframe = useRef<null | HTMLIFrameElement>(null);
@@ -56,7 +57,11 @@ export default function DoFloEmbed(props: {
             iframe.current.scrollIntoView();
             break;
           case "setHeight":
-            setHeight(`${args[1]}px`);
+            if (props.minHeight ? props.minHeight : 0 > parseInt(args[1])) {
+              setHeight(`${props.minHeight}px`);
+            } else {
+              setHeight(`${args[1]}px`);
+            }
             setOpacity(1);
             break;
           case "collapseErrorPage":

@@ -7,10 +7,19 @@ import DoFloEmbed from "../react-doflo-embed";
 
 storiesOf("DoFloEmbed", module)
   .add("Simple (localhost)", () => (
-    <DoFloEmbed src="http://localhost:3007/73244192d484358" />
+    <DoFloEmbed
+      minHeight={3000}
+      src="http://localhost:3007/7b6c19b2-4efd-411e-b7d9-d46b283a19b9"
+    />
   ))
   .add("Simple (prod)", () => (
     <DoFloEmbed src="https://forms.doflo.com/73244192d484358" />
+  ))
+  .add("Simple (stage)", () => (
+    <DoFloEmbed
+      minHeight={3000}
+      src="https://forms.stage-doflo.com/7b6c19b2-4efd-411e-b7d9-d46b283a19b9"
+    />
   ))
   .add("Simple Name", () => (
     <DoFloEmbed src="https://forms.doflo.com/73d244192484358/" />
