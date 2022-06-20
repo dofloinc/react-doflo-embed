@@ -27,6 +27,9 @@ export default function DoFloEmbed(props: {
   );
   const [srcModified, setSrcModified] = useState(false);
   const [height, setHeight] = useState("300px");
+  const [minHeight, setMinHeight] = useState<number | undefined>(
+    props.minHeight
+  );
   const [opacity, setOpacity] = useState(0.01);
   const version =
     "v[VI]{version}[/VI]"; /* this is replaced by storybook during dev and rollup during build */
@@ -39,6 +42,16 @@ export default function DoFloEmbed(props: {
       queue.current = [];
     }
   }, [iframe.current]);
+
+  useEffect(() => {
+    setMinHeight(props.minHeight);
+    if (
+      parseInt(height.replace("px", "")) <
+      (props.minHeight ? props.minHeight : 0)
+    ) {
+      setHeight(props.minHeight + "px");
+    }
+  }, [props.minHeight]);
 
   const handleIframeMessage = useCallback(
     (e: { data: string; origin: string }) => {
@@ -57,8 +70,8 @@ export default function DoFloEmbed(props: {
             iframe.current.scrollIntoView();
             break;
           case "setHeight":
-            if ((props.minHeight ? props.minHeight : 0) >= parseInt(args[1])) {
-              setHeight(`${props.minHeight}px`);
+            if ((minHeight ? minHeight : 0) >= parseInt(args[1])) {
+              setHeight(`${minHeight}px`);
             } else {
               setHeight(`${args[1]}px`);
             }
