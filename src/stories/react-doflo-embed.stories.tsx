@@ -1,26 +1,47 @@
 import React from "react"; //eslint-disable-line no-unused-vars
 
 import { storiesOf } from "@storybook/react";
+import useDimension from "./dimensions";
 
 //import JotformEmbed from '../lib/cjs/react-jotform-embed';
 import DoFloEmbed from "../react-doflo-embed";
 
 storiesOf("DoFloEmbed", module)
-  .add("Simple (localhost)", () => (
-    <DoFloEmbed
-      minHeight={2000}
-      src="http://localhost:3007/7b6c19b2-4efd-411e-b7d9-d46b283a19b9"
-    />
-  ))
+  .add("Simple (localhost)", () => {
+    const [ref, { height }] = useDimension({ liveMeasure: true });
+
+    return (
+      <div ref={ref} style={{ height: "100vh" }}>
+        {height}
+        <DoFloEmbed
+          minHeight={height}
+          src="http://localhost:3007/7b6c19b2-4efd-411e-b7d9-d46b283a19b9"
+        />
+      </div>
+    );
+  })
   .add("Simple (prod)", () => (
     <DoFloEmbed src="https://forms.doflo.com/73244192d484358" />
   ))
-  .add("Simple (stage)", () => (
-    <DoFloEmbed
-      minHeight={3000}
-      src="https://forms.stage-doflo.com/7b6c19b2-4efd-411e-b7d9-d46b283a19b9"
-    />
-  ))
+  .add(
+    "Simple (stage)",
+    () => (
+      <DoFloEmbed
+        minHeight={3000}
+        src="https://forms.stage-doflo.com/7b6c19b2-4efd-411e-b7d9-d46b283a19b9"
+      />
+    ),
+    {
+      disabled: {
+        description: "Disable mode for the button",
+        table: { category: "format" },
+      },
+      loading: {
+        description: "Loading mode for the button",
+        table: { category: "format" },
+      },
+    }
+  )
   .add("Simple Name", () => (
     <DoFloEmbed src="https://forms.doflo.com/73d244192484358/" />
   ))

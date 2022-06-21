@@ -34,6 +34,13 @@ export default function DoFloEmbed(props: {
   const version =
     "v[VI]{version}[/VI]"; /* this is replaced by storybook during dev and rollup during build */
 
+  const [style, setStyle] = useState({
+    height: height,
+    transition: "opacity 0.3s linear",
+    width: "100%",
+    opacity: opacity,
+  });
+
   useEffect(() => {
     if (iframe.current && queue.current.length > 0) {
       queue.current.forEach((d) => {
@@ -52,6 +59,15 @@ export default function DoFloEmbed(props: {
       setHeight(props.minHeight + "px");
     }
   }, [props.minHeight]);
+
+  useEffect(() => {
+    setStyle({
+      height: height,
+      transition: "opacity 0.3s linear",
+      width: "100%",
+      opacity: opacity,
+    });
+  }, [height, opacity]);
 
   const handleIframeMessage = useCallback(
     (e: { data: string; origin: string }) => {
@@ -160,12 +176,7 @@ export default function DoFloEmbed(props: {
   return (
     <iframe
       ref={iframe}
-      style={{
-        height: height,
-        transition: "opacity 0.3s linear",
-        width: "100%",
-        opacity: opacity,
-      }}
+      style={style}
       // allowTransparency={true}
       // allowfullscreen="true"
       className={props.className}
