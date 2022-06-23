@@ -1,12 +1,28 @@
-import React, { useCallback, useRef, useEffect, useState } from "react";
+import React, {
+  ReactDOM,
+  useCallback,
+  useRef,
+  useEffect,
+  useState,
+} from "react";
+import useDebouncedEffect from "./useDebouncedEffect";
+export type DoFloEvent = {
+  name: string;
+  message: string;
+  data: any;
+};
+
 export default function DoFloEmbed(props: {
   src: string;
   className?: string;
   minHeight?: number;
   scrolling?: boolean;
+  onError?(error: Error): void;
+  onEvent?(e: DoFloEvent): void;
 }) {
   const iframe = useRef<null | HTMLIFrameElement>(null);
   const queue = useRef<Array<{ data: string; origin: string }>>([]);
+  const minHeight = useRef(props.minHeight);
   const [added, setAdded] = useState(false);
   /**
    * Replace the other values incase someone uses the wrong version
@@ -27,9 +43,9 @@ export default function DoFloEmbed(props: {
   );
   const [srcModified, setSrcModified] = useState(false);
   const [height, setHeight] = useState("300px");
-  const [minHeight, setMinHeight] = useState<number | undefined>(
-    props.minHeight
-  );
+  // const [minHeight, setMinHeight] = useState<number | undefined>(
+  //   props.minHeight
+  // );
   const [opacity, setOpacity] = useState(0.01);
   const version =
     "v[VI]{version}[/VI]"; /* this is replaced by storybook during dev and rollup during build */
@@ -51,14 +67,26 @@ export default function DoFloEmbed(props: {
   }, [iframe.current]);
 
   useEffect(() => {
-    setMinHeight(props.minHeight);
-    if (
-      parseInt(height.replace("px", "")) <
-      (props.minHeight ? props.minHeight : 0)
-    ) {
-      setHeight(props.minHeight + "px");
+    if (props.minHeight) {
+      minHeight.current = props.minHeight;
     }
   }, [props.minHeight]);
+
+  useDebouncedEffect(
+    () => {
+      if (minHeight.current) {
+        if (props.onEvent) {
+          props.onEvent({
+            name: "MIN_HEIGHT_SET",
+            message: "The minHeight value was updated " + minHeight.current,
+          } as DoFloEvent);
+        }
+        setHeight(`${minHeight.current}px`);
+      }
+    },
+    [minHeight.current],
+    100
+  );
 
   useEffect(() => {
     setStyle({
@@ -67,6 +95,18 @@ export default function DoFloEmbed(props: {
       width: "100%",
       opacity: opacity,
     });
+
+    if (props.onEvent)
+      props.onEvent({
+        name: "HEIGHT_CHANGE",
+        message: `The form has requested to setHeight ${height} ${
+          props.minHeight
+            ? `there is a min height of ${props.minHeight}px`
+            : minHeight.current
+            ? `there is a min height of ${minHeight.current}px`
+            : ""
+        }`,
+      } as DoFloEvent);
   }, [height, opacity]);
 
   const handleIframeMessage = useCallback(
@@ -80,14 +120,33 @@ export default function DoFloEmbed(props: {
         queue.current.push(e);
         return;
       }
-      if (iframe.current.src.split("?")[0].indexOf(embedId) > -1) {
+      if (args[0] === "setError") {
+        if ((minHeight.current ? minHeight.current : 0) > parseInt(args[1])) {
+          setHeight(`${minHeight.current}px`);
+        } else {
+          setHeight(`${args[1]}px`);
+        }
+        setOpacity(1);
+        if (props.onError) {
+          props.onError(
+            new Error("Form Error: " + args[2] ? args[2] : undefined)
+          );
+        }
+      } else if (iframe.current.src.split("?")[0].indexOf(embedId) > -1) {
         switch (args[0]) {
           case "scrollIntoView":
             iframe.current.scrollIntoView();
+            if (props.onEvent)
+              props.onEvent({
+                name: "SCROLL_INTO_VIEW",
+                message: "The form has requested to be scrolled into view",
+              } as DoFloEvent);
             break;
           case "setHeight":
-            if ((minHeight ? minHeight : 0) >= parseInt(args[1])) {
-              setHeight(`${minHeight}px`);
+            if (
+              (minHeight.current ? minHeight.current : 0) >= parseInt(args[1])
+            ) {
+              setHeight(`${minHeight.current}px`);
             } else {
               setHeight(`${args[1]}px`);
             }
@@ -97,9 +156,19 @@ export default function DoFloEmbed(props: {
             if (iframe.current.clientHeight > window.innerHeight) {
               setHeight(`${args[1]}px`);
             }
+            if (props.onEvent)
+              props.onEvent({
+                name: "COLLAPSE_ERROR",
+                message: "The form has requested to collapse",
+              } as DoFloEvent);
             break;
           case "reloadPage":
             window.location.reload();
+            if (props.onEvent)
+              props.onEvent({
+                name: "RELOAD",
+                message: "The form has requested to be reloaded",
+              } as DoFloEvent);
             break;
         }
         const isDoFlo = e.origin.indexOf("doflo") > -1;
