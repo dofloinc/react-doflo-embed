@@ -12,6 +12,7 @@
     "outDir": "dist",
     "moduleResolution": "node",
     "emitDeclarationOnly": false,
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true
   },
