@@ -8,19 +8,18 @@ on:
       - README.md
       - src/**
       - package.json
-      - .github/workflows/publish react.yml
+      - .github/workflows/publish_react.yml
 
 jobs:
   react-build-and-publish-npm:
-    runs-on: ubuntu-latest
+    runs-on: ${{ vars.RUNS_ON_IMAGE }}
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 1
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
+          node-version: ${{ vars.NODE_VERSION }}
       - run: npm ci
       # - run: npm run build
       - run: npm run semantic-release
